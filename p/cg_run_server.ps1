@@ -3,7 +3,7 @@ $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 # Step 1: Read the port number from ccc.config (located in the root directory)
 $rootDir = Resolve-Path "$scriptDir\..\..\"
-$portNumber = Get-Content "$rootDir\ccc.config"
+$portNumber = Get-Content "$rootDir\portnr.def"
 $portNumber = [int]$portNumber
 
 # Step 2: Check if the repository is up to date

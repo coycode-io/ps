@@ -3,7 +3,7 @@
 # Step 1: Read the port number from ccc.config (located in the root directory)
 scriptDir=$(dirname "$0")
 rootDir=$(realpath "$scriptDir/../../")
-portNumber=$(cat "$rootDir/ccc.config")
+portNumber=$(cat "$rootDir/portnr.def")
 
 # Step 2: Check if the repository is up to date
 cd "$rootDir"
