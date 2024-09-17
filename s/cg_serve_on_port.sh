@@ -29,5 +29,5 @@ else
 fi
 
 # Step 3: Start the server
-http-server -p "$portNumber" --cors
+http-server -p "$portNumber" --cors -c-1
 
