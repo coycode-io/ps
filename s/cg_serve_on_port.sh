@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo -ne "\033]0;$(basename "$PWD")\007"
 # Step 1: Read the port number from ccc.config (located in the root directory)
 scriptDir=$(dirname "$0")
 rootDir=$(realpath "$scriptDir/../../")
