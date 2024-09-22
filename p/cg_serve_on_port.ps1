@@ -4,7 +4,7 @@ $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 # Step 1: Read the port number from ccc.config (located in the root directory)
 $rootDir = Resolve-Path "$scriptDir\..\..\"
 $portNumber = Get-Content "$rootDir\portnr.def"
-$portNumber = [int]$portNumber
+$portNumber = [int]$portNumber.Trim()  # Ensure we trim extra spaces or newlines
 
 # Step 2: Check if the repository is up to date
 cd $rootDir
@@ -14,8 +14,8 @@ if ($LASTEXITCODE -ne 0) {
     throw "Failed to fetch latest changes from Git. Exiting..."
 }
 
-$localCommit = git rev-parse @
-$remoteCommit = git rev-parse @{u}
+$localCommit = git rev-parse '@'   # Use '@' in quotes to avoid PowerShell confusion
+$remoteCommit = git rev-parse '@{u}'  # Similarly, use '@{u}' in quotes
 
 if ($localCommit -ne $remoteCommit) {
     Write-Host "New updates available. Pulling changes..."
@@ -28,4 +28,4 @@ if ($localCommit -ne $remoteCommit) {
 }
 
 # Step 3: Start the server
-http-server -p $portNumber --cors
+http-server -p $portNumber --cors -c-1
