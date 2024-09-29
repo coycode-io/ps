@@ -51,6 +51,8 @@ Remove-Item -Recurse -Force $TempDir
 # 8. Replace the main function in the new project's main.dart
 $MainDartPath = "$RootDir\$NewProjectName\lib\main.dart"
 Write-Host "Modifying main.dart in the new project..."
-(Get-Content $MainDartPath) -replace 'void main\(\) \{[\s\S]*?runApp\(const MyApp\(\)\);\s*\}', 'void main() {`n  runApp(const ProviderScope(child: const MyApp()));`n}' | Set-Content -Path $MainDartPath
+$MainDartContent = Get-Content $MainDartPath
+$MainDartContent = $MainDartContent -replace 'void main\(\) \{[^}]+\}', 'void main() {`n  runApp(const ProviderScope(child: const MyApp()));`n}'
+Set-Content -Path $MainDartPath -Value $MainDartContent
 
 Write-Host "Setup completed successfully."
