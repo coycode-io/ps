@@ -25,7 +25,7 @@ $PubspecPath = "$RootDir\$NewProjectName\pubspec.yaml"
 $PubspecContent = Get-Content $PubspecPath
 
 # Insert the dependency after the "flutter:" dependency
-$UpdatedContent = $PubspecContent -replace '(  flutter:)', "`$1`n  $ProjectName:`n    path: ../"
+$UpdatedContent = $PubspecContent -replace '(  flutter:)', "`$1`n  ${ProjectName}:`n    path: ../"
 Set-Content -Path $PubspecPath -Value $UpdatedContent
 
 # 4. Create the lib/providers directory in the current project
