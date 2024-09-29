@@ -48,9 +48,4 @@ Copy-Item -Recurse -Path "$TempDir\lib\providers\*" -Destination "$RootDir\lib\p
 Write-Host "Deleting the temporary directory..."
 Remove-Item -Recurse -Force $TempDir
 
-# 8. Replace the main function in the new project's main.dart
-$MainDartPath = "$RootDir\$NewProjectName\lib\main.dart"
-Write-Host "Modifying main.dart in the new project..."
-(Get-Content $MainDartPath) -replace 'void main\(\) \{[\s\S]*?runApp\(const MyApp\(\)\);\s*\}', 'void main() {`n  runApp(const ProviderScope(child: MyApp()));`n}' | Set-Content -Path $MainDartPath
-
 Write-Host "Setup completed successfully."
