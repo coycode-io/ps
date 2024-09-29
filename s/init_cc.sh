@@ -42,4 +42,9 @@ cp -r "$TEMP_DIR/lib/providers/"* "$ROOT_DIR/lib/providers/"
 echo "Deleting the temporary directory..."
 rm -rf "$TEMP_DIR"
 
+# 8. Replace the main function in the new project's main.dart
+MAIN_DART_PATH="$ROOT_DIR/$NEW_PROJECT_NAME/lib/main.dart"
+echo "Modifying main.dart in the new project..."
+sed -i 's|void main() {.*runApp(const MyApp());.*}|void main() {\n  runApp(const ProviderScope(child: const MyApp()));\n}|' "$MAIN_DART_PATH"
+
 echo "Setup completed successfully."
