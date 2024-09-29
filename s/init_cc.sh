@@ -23,7 +23,7 @@ flutter pub add flutter_riverpod
 
 # 3. Add project A as a dependency in the new project's pubspec.yaml
 echo "Adding $PROJECT_NAME as a dependency in $NEW_PROJECT_NAME's pubspec.yaml..."
-sed -i "/^  flutter:/a \ \ $PROJECT_NAME:\n\ \ \ \ path: ../" pubspec.yaml
+sed -i "/sdk: flutter/a \ \ $PROJECT_NAME:\n\ \ \ \ path: ../" pubspec.yaml
 
 # 4. Create the lib/providers directory in the current project
 echo "Creating lib/providers directory in the current project..."

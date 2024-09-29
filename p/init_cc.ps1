@@ -24,8 +24,8 @@ Write-Host "Adding $ProjectName as a dependency in $NewProjectName's pubspec.yam
 $PubspecPath = "$RootDir\$NewProjectName\pubspec.yaml"
 $PubspecContent = Get-Content $PubspecPath
 
-# Insert the dependency after the "flutter:" dependency
-$UpdatedContent = $PubspecContent -replace '(  flutter:)', "`$1`n  ${ProjectName}:`n    path: ../"
+# Insert the dependency after the "sdk: flutter" line
+$UpdatedContent = $PubspecContent -replace '(  sdk: flutter)', "`$&`n  $ProjectName:`n    path: ../"
 Set-Content -Path $PubspecPath -Value $UpdatedContent
 
 # 4. Create the lib/providers directory in the current project
