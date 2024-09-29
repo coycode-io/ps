@@ -1,28 +1,39 @@
 #!/bin/bash
 
-# Define the root directory as the parent of the script's location
-ROOT_DIR=$(dirname $(dirname $(realpath $0)))
+# Get the root directory of the current Flutter project
+ROOT_DIR=$(pwd)
 
-# 1. Add the latest flutter_riverpod package to pubspec.yaml
-echo "Adding flutter_riverpod to pubspec.yaml..."
+# 1. Add flutter_riverpod package to the current Flutter project
+echo "Adding flutter_riverpod to the current Flutter project..."
 flutter pub add flutter_riverpod
 
-# 2. Clone the repo coycode-io/template_riverpod_notifier
-TEMP_DIR=$(mktemp -d)
-echo "Cloning template repository..."
-git clone https://github.com/coycode-io/template_riverpod_notifier.git $TEMP_DIR
+# 2. Create a new Flutter project with a random 5-digit number
+RANDOM_NUMBER=$(shuf -i 10000-99999 -n 1)
+NEW_PROJECT_NAME="test_project$RANDOM_NUMBER"
+echo "Creating new Flutter project: $NEW_PROJECT_NAME..."
+flutter create "$ROOT_DIR/$NEW_PROJECT_NAME"
 
-# 3. Copy the folder lib/providers from the cloned repo to the root project's lib/providers
-echo "Copying 'lib/providers' from the template to the root project..."
-mkdir -p $ROOT_DIR/lib/providers
-cp -r $TEMP_DIR/lib/providers/* $ROOT_DIR/lib/providers/
+# Add flutter_riverpod to the new Flutter project
+echo "Adding flutter_riverpod to $NEW_PROJECT_NAME..."
+cd "$ROOT_DIR/$NEW_PROJECT_NAME"
+flutter pub add flutter_riverpod
+cd "$ROOT_DIR"
 
-# 4. Copy the folder test_project from the cloned repo to the root project's lib/providers
-echo "Copying 'test_project' to the root project's 'lib/providers'..."
-cp -r $TEMP_DIR/test_project $ROOT_DIR/lib/providers/
+# 3. Create the lib/providers directory in the current project
+echo "Creating lib/providers directory..."
+mkdir -p "$ROOT_DIR/lib/providers"
 
-# Clean up: Remove the temporary directory
-echo "Cleaning up temporary files..."
-rm -rf $TEMP_DIR
+# 4. Clone the GitHub repo into a temporary directory
+TEMP_DIR="$ROOT_DIR/temp"
+echo "Cloning the template repository into $TEMP_DIR..."
+git clone https://github.com/coycode-io/template_riverpod_notifier.git "$TEMP_DIR"
+
+# 5. Copy the lib/providers content from the cloned repo into the current project's lib/providers
+echo "Copying content from the template's lib/providers to the current project's lib/providers..."
+cp -r "$TEMP_DIR/lib/providers/"* "$ROOT_DIR/lib/providers/"
+
+# 6. Delete the temporary directory
+echo "Deleting the temporary directory..."
+rm -rf "$TEMP_DIR"
 
 echo "Setup completed successfully."
