@@ -7,29 +7,41 @@ $outputDirAndroid = Join-Path -Path $PWD -ChildPath "jniLibs"
 if (!(Test-Path -Path $outputDirAndroid)) {
     New-Item -ItemType Directory -Path $outputDirAndroid | Out-Null
 }
+$armeabi = "AND-armeabi-v7a"
+$arm64 = "AND-arm64-v8a"
+$armX8664 = "AND-x86_64"
+$appleDarwinX8664 = "APPLE-x86_64-apple-darwin"
+$appleDarwinAarch64 = "APPLE-aarch64-apple-darwin"
+$architecturesNotBuilt = @($appleDarwinX8664,$appleDarwinAarch64)
+$architecturesActuallyBuilt = @()
 
 # Build for Android targets
-cargo ndk -t armeabi-v7a -t arm64-v8a -t x86_64 -o $outputDirAndroid build --release
-Write-Host "Rust libraries for Android built and placed in '$outputDirAndroid'"
+#cargo ndk -t armeabi-v7a -t arm64-v8a -t x86_64 -o $outputDirAndroid build --release
+#Write-Host "Rust libraries for Android built and placed in '$outputDirAndroid'"
 
-# Ensure the Apple output directory exists
-$outputDirApple = Join-Path -Path $PWD -ChildPath "appleLibs"
-if (!(Test-Path -Path $outputDirApple)) {
-    New-Item -ItemType Directory -Path $outputDirApple | Out-Null
+try {
+    cargo ndk -t armeabi-v7a -o $outputDirAndroid build --release
+	$architecturesActuallyBuilt+=$armeabi
+} catch {
+    $architecturesNotBuilt+=$armeabi
+}
+try {
+    cargo ndk -t arm64-v8a -o $outputDirAndroid build --release
+	$architecturesActuallyBuilt+=$arm64
+} catch {
+    $architecturesNotBuilt+=$arm64
+}
+try {
+    cargo ndk -t x86_64 -o $outputDirAndroid build --release
+	$architecturesActuallyBuilt+=$armX8664
+} catch {
+    $architecturesNotBuilt+=$armX8664
 }
 
-# Build for Apple targets
-$appleTargets = @("x86_64-apple-darwin", "aarch64-apple-darwin")
-foreach ($target in $appleTargets) {
-    cargo build --release --target $target
-    $buildDir = Join-Path -Path $PWD -ChildPath "target\$target\release"
-    Copy-Item -Path "$buildDir\*.dylib" -Destination $outputDirApple -Force
-}
-
-Write-Host "Rust libraries for Apple built and placed in '$outputDirApple'"
 
 # Read the coycode.toml file using PSToml
 $coycodePath = Join-Path -Path $PWD -ChildPath "coycode.toml"
+if ($architecturesActuallyBuilt.Count -gt 0) {
 if (Test-Path -Path $coycodePath) {
     try {
         # Parse the TOML file
@@ -66,3 +78,22 @@ if (Test-Path -Path $coycodePath) {
 } else {
     Write-Host "The 'coycode.toml' file was not found in the project root."
 }
+} 
+$builtCount = $architecturesActuallyBuilt.Count
+$notBuiltCount = $architecturesNotBuilt.Count
+
+# Output successfully built
+Write-Output "$builtCount successfully built: $($architecturesActuallyBuilt -join ', ')"
+
+# Output the header for not successfully built
+Write-Output "****************************************************"
+Write-Output "$notBuiltCount NOT successfully built:"
+
+# Numerate and list the not-built architectures
+for ($i = 0; $i -lt $notBuiltCount; $i++) {
+    $index = $i + 1
+    Write-Output "$index.$($architecturesNotBuilt[$i])"
+}
+
+# Footer
+Write-Output "****************************************************"
