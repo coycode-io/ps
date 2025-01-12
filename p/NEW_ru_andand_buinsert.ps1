@@ -53,26 +53,26 @@ if (Test-Path -Path $coycodePath) {
         $tomlContent =  ConvertFrom-Toml $coycodeContent
         # Extract the 'copy_delete_compiled_to' key
         $copyDeleteCompiledTo = "none"
-		$baseDirectory = $tomlContent.project_absolute_base.Trim() -replace '\s+', '' -replace '\r', '' -replace '\n', ''
-		$useProjectsDirsArray=$tomlContent.use_anws_dirs
-        $compileTargetInAnw=$tomlContent.android_compile_target
+		#$baseDirectory = $tomlContent.project_absolute_base.Trim() -replace '\s+', '' -replace '\r', '' -replace '\n', ''
+		$compileTargetDirsInContainers=$tomlContent.projects_absolute_bases
+        $compileTargetDirAndroid=$tomlContent.android_compile_target
 		if ($null -ne $copyDeleteCompiledTo) {
-            foreach ($useDir in $useProjectsDirsArray) {
-				$trimmedDir = $useDir.Trim() -replace '\s+', '' -replace '\r', '' -replace '\n', ''
-				$completeDir = Join-Path -Path $baseDirectory -ChildPath $trimmedDir
-				$completeTargetDir = Join-Path -Path $completeDir -ChildPath $compileTargetInAnw
+            foreach ($useContainer in $compileTargetDirsInContainers) {
+				$trimmedDir = $useContainer.Trim() -replace '\s+', '' -replace '\r', '' -replace '\n', ''
+				#$completeDir = Join-Path -Path $baseDirectory -ChildPath $trimmedDir
+				$completeTargetDir = Join-Path -Path $trimmedDir -ChildPath $compileTargetDirAndroid
                 if (Test-Path -Path $completeTargetDir -PathType Container) {
                     # Delete the jniLibs folder in the target directory
                     $jniLibsPath = Join-Path -Path $completeTargetDir -ChildPath "jniLibs"
                     if (Test-Path -Path $jniLibsPath) {
                         Remove-Item -Path $jniLibsPath -Recurse -Force
-                        Write-Host "Deleted 'jniLibs' in directory '$dir'"
+                        Write-Host "Deleted older 'jniLibs' in directory '$completeTargetDir'"
                     }
                     # Copy the jniLibs folder from the project root
                     Copy-Item -Path $outputDirAndroid -Destination $completeTargetDir -Recurse -Force
-                    Write-Host "Copied 'jniLibs' from project root to '$dir'"
+                    Write-Host "Copied newer'jniLibs' from project root to '$completeTargetDir'"
                 } else {
-                    Write-Host "Directory '$dir' does not exist. Skipping."
+                    Write-Host "Directory '$completeTargetDir' does not exist. Skipping."
                 }
             }
         } else {
