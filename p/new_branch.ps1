@@ -27,7 +27,7 @@ function CreateNewBranch {
     # Check if the current branch is 'main'
     $currentBranch = git rev-parse --abbrev-ref HEAD
     if ($currentBranch -eq "main") {
-        # Add changes, commit, and push to 'main' before creating a new branch
+        # Add changes, commit,and push to 'main' before creating a new branch
         git add .
         git commit -m ("before " + $newBranchName)
         git push -u origin main
