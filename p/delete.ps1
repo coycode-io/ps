@@ -39,7 +39,7 @@ function DeleteBranchAndPushToMain {
         # Checkout 'main' branch
         git checkout main > $null 2>&1
         if ($LASTEXITCODE -ne 0) {
-            Write-Host "Failed to switch to 'main' branch.  Exiting..." -ForegroundColor Red
+            Write-Host "Failed to switch to 'main' branch. Exiting..." -ForegroundColor Red
             exit 1
         }
 
