@@ -1,7 +1,7 @@
 param (
     [string]$branchName
 )
-
+# random
 function CreateNewBranch {
     # Check if branchName is not empty
     git ls-remote > $null 2>&1
@@ -10,19 +10,16 @@ function CreateNewBranch {
         exit 1
     }
     if ([string]::IsNullOrEmpty($branchName)) {
-        Write-Host "Error: Branch name cannot be empty..." -ForegroundColor Red
-        return
+        $branchName = "auto"
     }
 
 
     # Get the current date
-    $currentDate = Get-Date
-    $year = $currentDate.Year.ToString().Substring(2)
-    $month = $currentDate.Month.ToString("D2")
-    $day = $currentDate.Day.ToString("D2")
+    
+    $currentDateFormatted = Get-Date -Format "yyyyMMddHHmmss"
 
     # Concatenate the date components with the provided branch name
-    $newBranchName = "$year$month$day$branchName"
+    $newBranchName = "$currentDateFormatted-$branchName"
 
     # Check if the current branch is 'main'
     $currentBranch = git rev-parse --abbrev-ref HEAD
