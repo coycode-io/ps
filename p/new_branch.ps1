@@ -4,10 +4,16 @@ param (
 
 function CreateNewBranch {
     # Check if branchName is not empty
+    git ls-remote > $null 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Error: Unable to connect to GitHub. Please check your internet connection or authentication..." -ForegroundColor Red
+        exit 1
+    }
     if ([string]::IsNullOrEmpty($branchName)) {
-        Write-Host "Error: Branch name cannot be empty."
+        Write-Host "Error: Branch name cannot be empty..." -ForegroundColor Red
         return
     }
+
 
     # Get the current date
     $currentDate = Get-Date
