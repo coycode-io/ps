@@ -12,7 +12,7 @@ if ($LASTEXITCODE -ne 0) {
 }
     # Check if the commit message is provided
     if ([string]::IsNullOrWhiteSpace($commitMessage)) {
-        $commitMessage = Read-Host "Please enter a commit message"
+        $commitMessage = Read-Host "Please enter a commit message:"
 
 # Check if the input is null or whitespace
 if ([string]::IsNullOrWhiteSpace($commitMessage)) {
