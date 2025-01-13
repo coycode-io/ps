@@ -7,6 +7,11 @@ if (-Not $m) {
     Write-Host "No commit message provided"
     exit 1
 }
+git ls-remote > $null 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host 'Unable to connect to GitHub. Exiting...' -ForegroundColor Red
+        exit 1
+    }
 
 # Get the current git branch
 $currentBranch = & git rev-parse --abbrev-ref HEAD

@@ -50,7 +50,7 @@ function DeleteBranchAndPushToMain {
             exit 1
         }
 
-        Write-Host "Branch '$currentBranch' deleted and changes pushed to 'main' successfully." -ForegroundColor Green
+        Write-Host "Branch '$currentBranch' deleted." -ForegroundColor Green
     } else {
         Write-Host "Error: You cannot perform this operation while on the 'main' branch." -ForegroundColor Yellow
     }
