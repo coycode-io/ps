@@ -7,11 +7,11 @@ param (
 function MergeBranchToMain {
     git ls-remote > $null 2>&1
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "Error: Unable to connect to GitHub. Please check your internet connection or authentication." -ForegroundColor Red
+    Write-Host "Error: Unable to connect to GitHub.com. Please check your internet connection or authentication." -ForegroundColor Red
     exit 1
 }
     # Check if the commit message is provided
-    if (-not [string]::IsNullOrWhiteSpace($commitMessage)) {
+    if ([string]::IsNullOrWhiteSpace($commitMessage)) {
         $commitMessage = "auto-commit-message"
     }
         # Check if the current branch is not 'main'
