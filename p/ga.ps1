@@ -4,7 +4,7 @@ param (
 )
 
 if (-Not $m) {
-    Write-Host "No commit message provided"
+    Write-Host "No commit message provided. Exiting..." -ForegroundColor Red
     exit 1
 }
 git ls-remote > $null 2>&1
