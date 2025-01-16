@@ -78,6 +78,32 @@ if (Test-Path -Path $coycodePath) {
         } else {
             Write-Host "The 'copy_delete_compiled_to' key is not defined in 'coycode.toml'."
         }
+        Write-Output "*******************FLUTTER*********************"
+        Write-Output "*******************FLUTTER*********************"
+        Write-Output "*******************FLUTTER*********************"
+        $DartFromHere = $tomlContent.dart_folder_out
+$DartFoldersTargetsArray = $tomlContent.dart_folders_targets
+
+if ($null -ne $DartFromHere -and (Test-Path -Path (Join-Path -Path $DartFromHere -ChildPath "rufl"))) {
+    foreach ($targetPath in $DartFoldersTargetsArray) {
+        if (Test-Path -Path $targetPath) {
+            $sourceRuflPath = Join-Path -Path $DartFromHere -ChildPath "rufl"
+            $destinationRuflPath = Join-Path -Path $targetPath -ChildPath "rufl"
+            try {
+                Copy-Item -Path $sourceRuflPath -Destination $destinationRuflPath -Recurse -Force
+                Write-Host "Copied 'rufl' folder to $targetPath successfully."
+            } catch {
+                Write-Host "Failed to copy 'rufl' folder to $targetPath. Error: $_"
+            }
+        } else {
+            Write-Host "Target path $targetPath does not exist. Skipping."
+        }
+    }
+} else {
+    Write-Host "'rufl' folder does not exist in $DartFromHere or $DartFromHere is null. Aborting."
+}
+
+
     } catch {
         Write-Host "Error reading or parsing 'coycode.toml': $_"
     }
